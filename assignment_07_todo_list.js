@@ -81,4 +81,85 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require("readline-sync");
 
+let myTasks = [];
+
+function handleAddTask() {
+  const description = readlineSync.question("Enter task: ");
+  myTasks.push(description);
+  console.log('Task added: "' + description + '"');
+}
+
+function handleViewTasks() {
+  if (myTasks.length === 0) {
+    console.log("You have no tasks right now.");
+    return;
+  }
+
+  console.log("Your Tasks:");
+  myTasks.forEach(function (task, position) {
+    console.log((position + 1) + ". " + task);
+  });
+}
+
+function handleDeleteTask() {
+  if (myTasks.length === 0) {
+    console.log("There is nothing to delete.");
+    return;
+  }
+
+  handleViewTasks();
+
+  const chosenNumber = Number(readlineSync.question("Enter task number to delete: "));
+  const targetIndex = chosenNumber - 1;
+
+  const isOutOfRange = targetIndex < 0 || targetIndex >= myTasks.length;
+  if (isOutOfRange) {
+    console.log("That task number does not exist.");
+    return;
+  }
+
+  const deletedTask = myTasks[targetIndex];
+  myTasks.splice(targetIndex, 1);
+  console.log('Task "' + deletedTask + '" has been removed.');
+}
+
+function showMenu() {
+  console.log("============================");
+  console.log("     TO-DO LIST MENU");
+  console.log("============================");
+  console.log("1. Add task");
+  console.log("2. View tasks");
+  console.log("3. Delete task");
+  console.log("4. Quit");
+}
+
+function startApp() {
+  let keepGoing = true;
+
+  while (keepGoing) {
+    showMenu();
+    const selection = readlineSync.question("Enter your choice (1-4): ");
+
+    switch (selection) {
+      case "1":
+        handleAddTask();
+        break;
+      case "2":
+        handleViewTasks();
+        break;
+      case "3":
+        handleDeleteTask();
+        break;
+      case "4":
+        console.log("Goodbye!");
+        keepGoing = false;
+        break;
+      default:
+        console.log("Please choose a valid option between 1 and 4.");
+    }
+  }
+}
+
+startApp();
